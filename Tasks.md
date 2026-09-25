@@ -54,8 +54,8 @@
 
 - [ ] T5.1 สร้างโปรเจ็กต์ Supabase และปิด "Allow new users to sign up" ใน Auth
 - [ ] T5.2 ผู้ดูแลระบบสร้างบัญชีเจ้าของใน Dashboard (ยืนยันอีเมลแล้ว) และบัญชีทดสอบที่ 2 สำหรับตรวจ RLS
-- [ ] T5.3 เขียน `supabase/schema.sql`: ตาราง `loans` ตาม design.md ข้อ 4 พร้อม check constraint และ index `owner_id`
-- [ ] T5.4 ใน `schema.sql`: เปิด RLS และสร้างนโยบาย select / insert / update สำหรับ `authenticated` ด้วย `owner_id = auth.uid()` ไม่มีนโยบาย delete
+- [x] T5.3 เขียน `supabase/schema.sql`: ตาราง `loans` ตาม design.md ข้อ 4 พร้อม check constraint และ index `owner_id`
+- [x] T5.4 ใน `schema.sql`: เปิด RLS และสร้างนโยบาย select / insert / update สำหรับ `authenticated` ด้วย `owner_id = auth.uid()` ไม่มีนโยบาย delete
 - [ ] T5.5 รัน `schema.sql` บน Supabase
 - [ ] T5.6 ติดตั้ง `@supabase/supabase-js`, สร้าง `.env.example`, ใส่ค่าจริงใน `.env.local` และตรวจว่า `.gitignore` กัน `.env.local`
 
@@ -63,7 +63,7 @@
 
 ## เฟส 6: ตรรกะและชั้นข้อมูล (`src/lib`) เขียนเทสต์ก่อน
 
-- [ ] T6.1 `supabaseClient.js`: สร้าง client จาก `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` แจ้งข้อผิดพลาดภาษาไทยถ้าไม่ได้ตั้งค่า
+- [ ] T6.1 `supabaseClient.js`: สร้าง client จาก `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY` แจ้งข้อผิดพลาดภาษาไทยถ้าไม่ได้ตั้งค่า
 - [ ] T6.2 `loanMapper.js`: แปลง Loan ↔ แถวตาราง (camelCase ↔ snake_case) + เทสต์
 - [ ] T6.3 `authErrors.js`: แปลงข้อผิดพลาด Auth/เครือข่ายเป็นข้อความไทย + เทสต์
 - [ ] T6.4 `loanRepository.js`: `listLoans`, `createLoan`, `updateLoan` (ไม่มี delete) คืนค่าที่เซิร์ฟเวอร์ส่งกลับ + เทสต์ด้วย mock client

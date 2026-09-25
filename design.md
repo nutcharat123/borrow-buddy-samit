@@ -35,7 +35,7 @@
 - React + Vite, ภาษา JavaScript (ไม่ใช้ TypeScript)
 - Supabase: Auth (อีเมล + รหัสผ่าน) และ Database (Postgres + RLS) ผ่านไลบรารี `@supabase/supabase-js`
 - ทดสอบด้วย Vitest
-- ค่าตั้งค่าผ่านตัวแปรสภาพแวดล้อม `VITE_SUPABASE_URL` และ `VITE_SUPABASE_ANON_KEY` ในไฟล์ `.env.local` (ไม่ commit ขึ้น git มีไฟล์ `.env.example` เป็นตัวอย่าง)
+- ค่าตั้งค่าผ่านตัวแปรสภาพแวดล้อม `VITE_SUPABASE_URL` และ `VITE_SUPABASE_PUBLISHABLE_KEY` ในไฟล์ `.env.local` (ไม่ commit ขึ้น git มีไฟล์ `.env.example` เป็นตัวอย่าง)
 - ตอนลงมือให้ตรวจเอกสาร Supabase ล่าสุดผ่าน Context7 ก่อน
 
 ## 4. โมเดลข้อมูล
@@ -106,7 +106,7 @@
 | delete | **ไม่มีนโยบาย** จึงลบไม่ได้ |
 
 - นโยบายทั้งหมดใช้กับ role `authenticated` เท่านั้น ผู้ที่ยังไม่เข้าสู่ระบบ (`anon`) อ่าน/เขียนไม่ได้เลย
-- ใช้เฉพาะ anon key ในหน้าเว็บ ห้ามใส่ service role key ในโค้ดหน้าเว็บ
+- ใช้เฉพาะ publishable key ในหน้าเว็บ ห้ามใส่ secret key หรือ service role key ในโค้ดหน้าเว็บ
 
 ## 7. หน้าจอ
 
