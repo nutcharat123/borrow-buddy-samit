@@ -1,79 +1,71 @@
 # Handoff: Borrow Buddy (สรุปส่งต่องาน)
 
-อัปเดตล่าสุด: 2026-09-25 (เสร็จครบทุกเฟส) อ่านไฟล์นี้ก่อน แล้วอ่าน [CONTEXT.md](./CONTEXT.md), [design.md](./design.md), [Tasks.md](./Tasks.md) เพื่อทำงานต่อ
+อัปเดตล่าสุด: 2026-09-25 (เวอร์ชัน 2: เสร็จเฟส 6, เฟส 5 ค้างบางส่วน) อ่านไฟล์นี้ก่อน แล้วอ่าน [CONTEXT.md](./CONTEXT.md), [design.md](./design.md), [Tasks.md](./Tasks.md) เพื่อทำงานต่อ
 
 ## โปรเจ็กต์คืออะไร
-เว็บหน้าเดียวสำหรับเจ้าของคนเดียว บันทึกว่าเพื่อนยืมของอะไร เมื่อไร ต้องคืนเมื่อไร และกดคืนแล้วได้ เทคโนโลยี: React 19 + Vite 8 (JavaScript), Vitest 5, เก็บข้อมูลใน localStorage
+เว็บหน้าเดียวบันทึกว่าเพื่อนยืมของอะไร เมื่อไร ต้องคืนเมื่อไร และกดคืนแล้วได้ เทคโนโลยี: React 19 + Vite 8 (JavaScript), Vitest 5
+
+- **เวอร์ชัน 1 (เฟส 1–4) เสร็จแล้ว**: เก็บข้อมูลใน localStorage
+- **เวอร์ชัน 2 (เฟส 5–8) กำลังทำ**: ย้ายข้อมูลไป Supabase, เข้าสู่ระบบด้วยอีเมล + รหัสผ่าน (ปิดสมัครเอง), RLS ให้เห็นเฉพาะ Loan ของตัวเอง, ไม่มีการลบ Loan, นำเข้าข้อมูลเดิมจาก localStorage ครั้งเดียว
 
 ## กติกาที่ต้องทำตาม
 - ตอบเป็นภาษาไทยสุภาพ กระชับ ประหยัด token
 - ใช้ JavaScript เท่านั้น (ไม่ใช้ TypeScript)
 - ทำตามคำสั่งผู้ใช้เท่านั้น
 - **ห้ามลบไฟล์โดยไม่ถามก่อน** (รวมถึงไฟล์ `.gitkeep`)
-- ห้ามแสดงข้อมูลส่วนตัว
-- **งาน git ทั้งหมดในโปรเจ็กต์นี้ให้มอบ agent `git-manager` ทำ** ไม่รัน git เองผ่าน Bash (แม้แต่ `git status`) และไม่ push
-- ผู้ใช้สั่งให้ **commit ทุกครั้งที่ทำ task เสร็จ** ข้อความ commit ภาษาอังกฤษ รูปแบบ `feat: T3.x ...` ปิดท้ายด้วย `Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>`
-- ก่อนตั้งค่า/ใช้ไลบรารี (Vite, React, Vitest) ให้ตรวจเอกสารล่าสุดผ่าน Context7 (React: `/websites/react_dev`)
-- รอให้ commit ของ task หนึ่งเสร็จก่อนเริ่มแก้ไฟล์ของ task ถัดไป เพื่อไม่ให้งานปนกัน
+- ห้ามแสดงข้อมูลส่วนตัว **ห้ามแสดงค่าใน `.env.local` หรือรหัสผ่านในแชท**
+- commit และ push เมื่อผู้ใช้สั่ง (ในเวอร์ชัน 2 ผู้ใช้สั่ง commit + push ตรง ๆ หลังจบแต่ละเฟส)
+- ก่อนตั้งค่า/ใช้ไลบรารี ให้ตรวจเอกสารล่าสุดผ่าน Context7 ถ้าไม่มี Context7 ให้ใช้ WebFetch อ่านเอกสารทางการ
+- เขียนเทสต์ก่อน (TDD) สำหรับโค้ดใน `src/lib`
 
-## สถานะงาน
+## สถานะงานเวอร์ชัน 2
 
-| Task | สถานะ | Commit |
+| เฟส / Task | สถานะ | Commit |
 |---|---|---|
-| T1.1 – T1.3 ตั้งโปรเจ็กต์ | เสร็จ | `f440dbc`, `c25eca7`, `f068441` |
-| T2.1 `dateFormat.js` | เสร็จ | `ae9e1f5` |
-| T2.2 `getLoanStatus` | เสร็จ | `d33bef9` |
-| T2.3 `getDaysOverdue` | เสร็จ | `ef3ae10` |
-| T2.4 `validateLoan` | เสร็จ | `2866281` |
-| T2.5 `groupLoans` | เสร็จ | `43e48e0` |
-| T2.6 `filterLoansByFriend` | เสร็จ | `49a8c48` |
-| T2.7 `markReturned` / `unmarkReturned` | เสร็จ | `4d58674` |
-| T2.8 `storage.js` | เสร็จ | `36f05e8` |
-| T3.1 `App.jsx` state + โหลด/บันทึก | เสร็จ | `e868549` |
-| T3.2 `LoanForm.jsx` | เสร็จ | `32066f2` |
-| T3.3 `SearchBox.jsx` | เสร็จ | `4c8fb6e` |
-| T3.4 `LoanList.jsx` / `LoanItem.jsx` | เสร็จ | `79f12ea` |
-| T3.5 ปุ่มคืนแล้ว/ยกเลิกการคืน/แก้ไข | เสร็จ | `8a29978` |
-| T3.6 `ThemeToggle.jsx` (โหมดมืด) | เสร็จ | `8641fa5` |
-| T3.7 สไตล์ (มือถือ + สถานะ) | เสร็จ | `51bef52` |
-| T4.1 `npm test` ผ่านทั้งหมด (68 ข้อ) | เสร็จ | `f7ee8af` |
-| T4.2 ทดลองเพิ่ม/แก้ไข/กดคืน/ยกเลิกคืน/รีเฟรช | เสร็จ | `b0e2673` |
-| T4.3 ทดลองกรณีขอบ | เสร็จ | `8c2908e` |
-| T4.4 มือถือและโหมดมืด | เสร็จ | `408e31e` |
-| T4.5 ไม่มีฟีเจอร์นอกขอบเขต + ศัพท์ตรง CONTEXT.md | เสร็จ | `566becf` |
+| เอกสารเวอร์ชัน 2 (design / CONTEXT / Tasks) | เสร็จ | `d196384` |
+| T5.1 ปิด "Allow new users to sign up" | **ค้าง** ผู้ใช้ทำเองใน Dashboard | – |
+| T5.2 สร้างบัญชีเจ้าของ + บัญชีทดสอบ (Auto Confirm) | **ค้าง** ผู้ใช้ทำเองใน Dashboard (รหัสผ่านไม่ผ่านแชท) | – |
+| T5.3 – T5.4 `supabase/schema.sql` (ตาราง, check, index, RLS, grant) | เสร็จ | `0b8ce55` |
+| T5.5 รัน `schema.sql` บน Supabase | **ค้าง** รอ Supabase MCP | – |
+| T5.6 ติดตั้ง supabase-js + `.env.example` | เสร็จบางส่วน **เหลือสร้าง `.env.local`** | `0b8ce55` |
+| T6.1 – T6.7 ชั้นข้อมูลใน `src/lib` + เทสต์ | เสร็จ | `f2bd480` |
+| เฟส 7 UI | ยังไม่เริ่ม | – |
+| เฟส 8 ตรวจรับ | ยังไม่เริ่ม | – |
 
-**ทุก task ใน `Tasks.md` (เฟส 1 – 4) เสร็จครบแล้ว** `npm test` ผ่านทั้งหมด 68 ข้อ (4 ไฟล์) `npm run lint` และ `npm run build` ผ่าน
-commit แรกของ repository คือ `ee81221` (เอกสาร + `.gitignore`) สาขา `main` ยังไม่ push repository อยู่ที่ `borrow-buddy/.git` (ไม่ใช่โฟลเดอร์แม่)
+`npm test` ผ่าน 124 ข้อ (9 ไฟล์), `npm run lint` และ `npm run build` ผ่าน, push ขึ้น `origin/main` แล้ว (https://github.com/nutcharat123/borrow-buddy-samit)
 
-## สิ่งที่ต้องทำต่อ
-ไม่มี task ค้างใน `Tasks.md` สิ่งที่รอการตัดสินใจของผู้ใช้:
-- push ขึ้น remote (ยังไม่มีการสั่ง ห้าม push เอง)
-- ลบไฟล์เทมเพลตที่ไม่ใช้แล้ว (`src/assets/*`, `public/icons.svg`) ต้องถามก่อน
-- ฟีเจอร์นอกขอบเขต (ลบ Loan, แจ้งเตือน, เลื่อนกำหนด, รูปภาพ, สำรองข้อมูล) ตาม design ข้อ 10 ให้ทบทวน `CONTEXT.md` ก่อนเพิ่ม
-
-ข้อจำกัดของการตรวจรับ: ตรวจมือถือด้วย iframe จำลองความกว้าง (360 – 390px) ไม่ใช่เครื่องจริง ส่วน component ไม่มีเทสต์อัตโนมัติ (Vitest ครอบคลุมเฉพาะ `src/lib`) ตรวจด้วยมือในเบราว์เซอร์
-
-หมายเหตุ: มี git-manager ตัวหนึ่งเคยรายงานผิดว่า `borrow-buddy` ไม่ใช่ git repository ทั้งที่ `.git` มีอยู่ ให้รัน git ด้วย `git -C "<พาธ borrow-buddy>"` และห้าม `git init`
-
-วิธีทดสอบในเบราว์เซอร์: dev server `npm run dev` ที่ http://localhost:5173/ ใส่ข้อมูลทดสอบผ่าน localStorage คีย์ `borrow-buddy:loans` แล้ว **ล้างข้อมูลทดสอบทุกครั้งหลังตรวจ** (ทั้งคีย์ `borrow-buddy:loans` และ `borrow-buddy:theme`)
+## ทำต่อจากตรงนี้
+1. **ยืนยันสิทธิ์ Supabase MCP**: เรียก `mcp__supabase__authenticate` เพื่อสร้างลิงก์ใหม่ (ลิงก์เก่าหมดอายุ) ให้ผู้ใช้เปิดแล้วกด **Authorize** ถ้าหน้า `localhost:<port>/callback` โหลดไม่ขึ้น ให้ผู้ใช้วาง URL จากแถบที่อยู่ แล้วเรียก `mcp__supabase__complete_authentication` MCP ผูกกับโปรเจ็กต์ `qvqcsdhutymnmovwqsay`
+2. ผู้ใช้ทำ T5.1 และ T5.2 ใน Dashboard
+3. ผ่าน MCP: รัน `supabase/schema.sql` (T5.5) แล้วตรวจตาราง นโยบาย และ grant
+4. ผ่าน MCP: ดึง Project URL และ publishable key มาเขียน `.env.local` (T5.6) โดยไม่แสดงค่าในแชท
+5. เริ่มเฟส 7 ตาม `Tasks.md`
 
 ## โครงโค้ดปัจจุบัน
-`src/lib` (ตรรกะล้วน มีเทสต์): `today` เป็นสตริง ISO `YYYY-MM-DD` ที่ส่งเข้าฟังก์ชันเสมอ
-- `loanRules.js`: `STATUS`, `STATUS_LABEL`, `getLoanStatus`, `getDaysOverdue`, `validateLoan`, `groupLoans`, `filterLoansByFriend`, `markReturned`, `unmarkReturned`
-- `storage.js`: `loadLoans(storage)` → `{ loans, warning }` อ่านอย่างเดียว, `saveLoans(loans, storage)` → `null` หรือข้อความเตือนไทย (คีย์ `borrow-buddy:loans`)
-- `dateFormat.js`: `formatThaiDate(iso)`, `toIsoDate(date)` (วันที่ท้องถิ่น)
-- `theme.js`: `getInitialTheme`, `saveTheme`, `toggleTheme`, `THEME` (คีย์ `borrow-buddy:theme`)
+`src/lib` (ตรรกะล้วน มีเทสต์ทุกไฟล์): `today` เป็นสตริง ISO `YYYY-MM-DD` ที่ส่งเข้าฟังก์ชันเสมอ
+- `loanRules.js`: `STATUS`, `STATUS_LABEL`, `getLoanStatus`, `getDaysOverdue`, `validateLoan`, `groupLoans`, `filterLoansByFriend`, `markReturned`, `unmarkReturned` (ไม่เปลี่ยนในเวอร์ชัน 2)
+- `dateFormat.js`: `formatThaiDate(iso)`, `toIsoDate(date)` (ไม่เปลี่ยน)
+- `theme.js`: `getInitialTheme`, `saveTheme`, `toggleTheme`, `THEME` (คีย์ `borrow-buddy:theme` ยังอยู่ใน localStorage)
+- `supabaseClient.js`: `readSupabaseConfig(env)` → `{ config, error }`, `getSupabase()` → `{ client, error }` (สร้างครั้งเดียว ไม่โยนข้อผิดพลาด)
+- `loanMapper.js`: `LOAN_COLUMNS`, `toLoan(row)`, `toRow(loan)` (ไม่ส่ง `id` / `owner_id`)
+- `supabaseErrors.js`: `ERROR_MESSAGE`, `toThaiError(error)` → ข้อความไทย หรือ `null`
+- `loanRepository.js`: `createLoanRepository(client)` → `listLoans`, `createLoan`, `updateLoan`, `createLoans` คืน `{ loans|loan, error }` error เป็นข้อความไทย **ไม่มีฟังก์ชันลบ**
+- `localImport.js`: `prepareLegacyImport(items)`, `importLegacyLoans(repository, items)`
+- `storage.js`: `readLegacyLoans`, `getImportMark` / `setImportMark` (คีย์ `borrow-buddy:imported:<ownerId>`, ค่า `IMPORT_MARK.IMPORTED` / `SKIPPED`) และยังมี `loadLoans` / `saveLoans` ของเวอร์ชัน 1 ที่ `App.jsx` ใช้อยู่ **ให้ลบใน T7.4**
 
-`src/components` (ไม่มีเทสต์ ตรวจด้วยมือในเบราว์เซอร์): `LoanForm`, `LoanList`, `LoanItem`, `SearchBox`, `ThemeToggle`
+`src/components` (ไม่มีเทสต์ ตรวจด้วยมือ): `LoanForm`, `LoanList`, `LoanItem`, `SearchBox`, `ThemeToggle`
 
-`src/App.jsx`: เก็บ state `loans`, `warning`, `editingId`, `query`, `theme` ทุกการเปลี่ยน Loan ผ่าน `changeLoans` (บันทึกทุกครั้ง) **ไม่ใช้ `useEffect` บันทึก** เพราะจะเขียนรายการว่างทับข้อมูลเสียตอนเปิดหน้า (design ข้อ 8) ธีมตั้งด้วย `useLayoutEffect` บน `data-theme` ของ `<html>`
+`src/App.jsx`: **ยังเป็นเวอร์ชัน 1** (อ่าน/เขียน localStorage ผ่าน `changeLoans`) จะเปลี่ยนในเฟส 7
+
+`supabase/schema.sql`: รันซ้ำได้, `revoke all` จาก `anon`/`authenticated` แล้ว grant เฉพาะ select/insert/update ให้ `authenticated`, นโยบายใช้ `(select auth.uid()) = owner_id`
 
 ## ข้อตัดสินใจและสิ่งที่ควรรู้
-- `npm test` = `vitest run --passWithNoTests` (จบเองไม่ค้าง watch) มี `npm run test:watch` แยกไว้ให้
-- วันที่เก็บเป็นสตริง ISO `YYYY-MM-DD` เทียบด้วยสตริงตรง ๆ ได้
-- ฟังก์ชัน storage รับ `storage` เป็นพารามิเตอร์ เพื่อทดสอบด้วย storage จำลองโดยไม่ต้องใช้ jsdom (Vitest ใช้สภาพแวดล้อม node)
-- `index.css` (ตัวแปรสี + ธีม `data-theme`) และ `App.css` (สไตล์ component) ถูกเขียนทับจากเทมเพลตแล้ว
-- ไฟล์เทมเพลตที่ไม่ถูกใช้แล้ว แต่ยังอยู่: `src/assets/*` (`hero.png`, `react.svg`, `vite.svg`) และ `public/icons.svg` การลบต้องถามผู้ใช้ก่อน
-- `package-lock.json` ถูก commit ไว้ ไม่ได้อยู่ใน `.gitignore`
+- ใช้ **publishable key** (`VITE_SUPABASE_PUBLISHABLE_KEY`) ตามเอกสาร Supabase ล่าสุด แทน anon key ห้ามใช้ secret / service role key ในหน้าเว็บ
+- `.gitignore` กัน `.env.local` แล้ว และไม่กัน `.env.example`
+- ตั้งชื่อไฟล์ `supabaseErrors.js` (ไม่ใช่ `authErrors.js`) เพราะแปลงข้อผิดพลาดของฐานข้อมูลด้วย
+- การนำเข้าข้อมูลเดิมไม่ลบข้อมูลใน localStorage และตรวจรูปแบบวันที่ก่อนส่ง เพื่อไม่ให้ฐานข้อมูลปฏิเสธทั้งชุด
+- `npm test` = `vitest run --passWithNoTests` (Vitest ใช้สภาพแวดล้อม node) ฟังก์ชันที่ใช้ storage/client รับเป็นพารามิเตอร์เพื่อทดสอบด้วยของจำลอง
+- ใน Git Bash บน Windows heredoc ที่ยาวและมีเครื่องหมาย `'` เคยพัง ให้ใช้เครื่องมือ Write เขียนไฟล์แทน
+- ไฟล์เทมเพลตที่ไม่ใช้แล้ว: `src/assets/*`, `public/icons.svg` การลบต้องถามผู้ใช้ก่อน
 - `src/components/.gitkeep` และ `src/lib/.gitkeep` เก็บไว้ ห้ามลบโดยไม่ถาม
-- `oxlint` มากับเทมเพลต (`npm run lint`)
+- วิธีทดสอบในเบราว์เซอร์: `npm run dev` ที่ http://localhost:5173/ ล้างข้อมูลทดสอบทุกครั้งหลังตรวจ
