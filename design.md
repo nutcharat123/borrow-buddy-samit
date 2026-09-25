@@ -155,7 +155,8 @@ borrow-buddy-samit/
         ├── supabaseClient.js # ใหม่: สร้าง client จากตัวแปรสภาพแวดล้อม
         ├── loanMapper.js     # ใหม่: แปลง Loan ↔ แถวในตาราง (ฟังก์ชันล้วน)
         ├── loanRepository.js # ใหม่: list / create / update Loan ผ่าน Supabase (ไม่มี delete)
-        ├── authErrors.js     # ใหม่: แปลงข้อผิดพลาด Supabase เป็นข้อความไทย
+        ├── supabaseErrors.js # ใหม่: แปลงข้อผิดพลาด Supabase (Auth + ฐานข้อมูล) เป็นข้อความไทย
+        ├── localImport.js    # ใหม่: ตรวจและนำเข้าข้อมูลเดิม (ฟังก์ชันล้วน + repository)
         └── storage.js        # เปลี่ยน: เหลือเฉพาะอ่าน Loan เดิมเพื่อนำเข้า และจำสถานะนำเข้าแล้ว
 ```
 
@@ -182,7 +183,7 @@ borrow-buddy-samit/
 **Vitest (ตรรกะใน `lib/`)**
 - เทสต์เดิมของ `loanRules.js` และ `dateFormat.js` ต้องผ่านเหมือนเดิม
 - `loanMapper.js`: แปลงไป-กลับครบทุกฟิลด์, `returnedDate` null
-- `authErrors.js`: ข้อผิดพลาดแต่ละแบบได้ข้อความไทยที่ถูก, แบบไม่รู้จักได้ข้อความทั่วไป
+- `supabaseErrors.js`: ข้อผิดพลาดแต่ละแบบได้ข้อความไทยที่ถูก, แบบไม่รู้จักได้ข้อความทั่วไป
 - `storage.js`: อ่าน Loan เดิม, JSON เสีย, เครื่องหมายนำเข้าแล้วแยกตามบัญชี
 - การนำเข้า: แยกรายการถูก/ผิดกติกา, ไม่ส่ง `id` เดิม
 - `loanRepository.js`: mock supabase client ตรวจว่าเรียก table/คอลัมน์ถูก และไม่มีฟังก์ชันลบ
