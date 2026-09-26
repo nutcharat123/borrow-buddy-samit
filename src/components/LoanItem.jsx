@@ -10,8 +10,8 @@ import {
 } from '../lib/loanRules.js'
 
 // หนึ่งรายการ Loan พร้อมปุ่ม: คืนแล้ว (เฉพาะที่ยังไม่คืน), ยกเลิกการคืน (เฉพาะที่คืนแล้ว), แก้ไข
-// ไม่มีปุ่มลบ
-export default function LoanItem({ loan, today, onMarkReturned, onUnmarkReturned, onEdit }) {
+// ไม่มีปุ่มลบ, busy = กำลังบันทึกรายการใดอยู่ ปิดปุ่มกันกดซ้ำ
+export default function LoanItem({ loan, today, busy, onMarkReturned, onUnmarkReturned, onEdit }) {
   const status = getLoanStatus(loan, today)
   const daysOverdue = getDaysOverdue(loan, today)
   const isReturned = status === STATUS.RETURNED
@@ -48,7 +48,7 @@ export default function LoanItem({ loan, today, onMarkReturned, onUnmarkReturned
               onChange={(e) => setReturnDate(e.target.value)}
             />
           </label>
-          <button type="button" className="mark-returned" onClick={handleMarkReturned}>
+          <button type="button" className="mark-returned" onClick={handleMarkReturned} disabled={busy}>
             คืนแล้ว
           </button>
         </div>
@@ -63,11 +63,11 @@ export default function LoanItem({ loan, today, onMarkReturned, onUnmarkReturned
 
       <div className="loan-actions">
         {isReturned && (
-          <button type="button" onClick={() => onUnmarkReturned(loan)}>
+          <button type="button" onClick={() => onUnmarkReturned(loan)} disabled={busy}>
             ยกเลิกการคืน
           </button>
         )}
-        <button type="button" onClick={() => onEdit(loan)}>
+        <button type="button" onClick={() => onEdit(loan)} disabled={busy}>
           แก้ไข
         </button>
       </div>

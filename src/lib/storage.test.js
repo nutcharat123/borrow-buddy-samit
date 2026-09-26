@@ -4,13 +4,9 @@ import {
   IMPORT_MARK_PREFIX,
   IMPORT_MARK_WARNING,
   LEGACY_READ_WARNING,
-  LOAD_WARNING,
-  SAVE_WARNING,
   STORAGE_KEY,
   getImportMark,
-  loadLoans,
   readLegacyLoans,
-  saveLoans,
   setImportMark,
 } from './storage.js'
 
@@ -43,56 +39,6 @@ const loan = {
   returnedDate: null,
 }
 
-describe('loadLoans', () => {
-  it('ยังไม่มีข้อมูล = รายการว่าง ไม่มีคำเตือน', () => {
-    expect(loadLoans(memoryStorage())).toEqual({ loans: [], warning: null })
-  })
-
-  it('อ่าน Loan ที่บันทึกไว้ได้ครบ', () => {
-    const storage = memoryStorage({ [STORAGE_KEY]: JSON.stringify([loan]) })
-    expect(loadLoans(storage)).toEqual({ loans: [loan], warning: null })
-  })
-
-  it('JSON เสีย = รายการว่างพร้อมคำเตือนภาษาไทย', () => {
-    const storage = memoryStorage({ [STORAGE_KEY]: '{เสีย' })
-    expect(loadLoans(storage)).toEqual({ loans: [], warning: LOAD_WARNING })
-  })
-
-  it('JSON ถูกต้องแต่ไม่ใช่อาร์เรย์ = รายการว่างพร้อมคำเตือน', () => {
-    const storage = memoryStorage({ [STORAGE_KEY]: '{"a":1}' })
-    expect(loadLoans(storage)).toEqual({ loans: [], warning: LOAD_WARNING })
-  })
-
-  it('อ่าน storage ไม่ได้ = รายการว่างพร้อมคำเตือน', () => {
-    expect(loadLoans(brokenStorage())).toEqual({ loans: [], warning: LOAD_WARNING })
-  })
-
-  it('ข้อมูลเสียต้องไม่ถูกเขียนทับตอนอ่าน', () => {
-    const storage = memoryStorage({ [STORAGE_KEY]: '{เสีย' })
-    loadLoans(storage)
-    expect(storage.data[STORAGE_KEY]).toBe('{เสีย')
-  })
-})
-
-describe('saveLoans', () => {
-  it('บันทึกเป็น JSON ใต้คีย์เดียว และอ่านกลับได้เหมือนเดิม', () => {
-    const storage = memoryStorage()
-    expect(saveLoans([loan], storage)).toBeNull()
-    expect(Object.keys(storage.data)).toEqual([STORAGE_KEY])
-    expect(loadLoans(storage).loans).toEqual([loan])
-  })
-
-  it('บันทึกรายการว่างได้', () => {
-    const storage = memoryStorage()
-    expect(saveLoans([], storage)).toBeNull()
-    expect(loadLoans(storage)).toEqual({ loans: [], warning: null })
-  })
-
-  it('บันทึกไม่ได้ = คืนคำเตือนภาษาไทย ไม่โยนข้อผิดพลาด', () => {
-    expect(saveLoans([loan], brokenStorage())).toBe(SAVE_WARNING)
-  })
-})
-
 describe('readLegacyLoans', () => {
   it('อ่าน Loan เดิมจากคีย์เวอร์ชัน 1', () => {
     const storage = memoryStorage({ [STORAGE_KEY]: JSON.stringify([loan]) })
@@ -109,8 +55,19 @@ describe('readLegacyLoans', () => {
     expect(storage.data).toEqual({ [STORAGE_KEY]: '{เสีย' })
   })
 
+  it('JSON ถูกต้องแต่ไม่ใช่อาร์เรย์ = คำเตือนภาษาไทย', () => {
+    const storage = memoryStorage({ [STORAGE_KEY]: '{"a":1}' })
+    expect(readLegacyLoans(storage)).toEqual({ loans: [], warning: LEGACY_READ_WARNING })
+  })
+
   it('อ่าน storage ไม่ได้ = คำเตือนภาษาไทย', () => {
     expect(readLegacyLoans(brokenStorage())).toEqual({ loans: [], warning: LEGACY_READ_WARNING })
+  })
+
+  it('ไม่มีฟังก์ชันบันทึก Loan ลง localStorage แล้ว', async () => {
+    const storage = await import('./storage.js')
+    expect(storage.loadLoans).toBeUndefined()
+    expect(storage.saveLoans).toBeUndefined()
   })
 })
 

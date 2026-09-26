@@ -1,6 +1,6 @@
 # Handoff: Borrow Buddy (สรุปส่งต่องาน)
 
-อัปเดตล่าสุด: 2026-09-25 (เวอร์ชัน 2: เสร็จเฟส 6, เฟส 5 ค้างบางส่วน) อ่านไฟล์นี้ก่อน แล้วอ่าน [CONTEXT.md](./CONTEXT.md), [design.md](./design.md), [Tasks.md](./Tasks.md) เพื่อทำงานต่อ
+อัปเดตล่าสุด: 2026-09-26 (เวอร์ชัน 2: เสร็จเฟส 7 รอตรวจรับเฟส 8, T5.1 ยังไม่ยืนยัน) อ่านไฟล์นี้ก่อน แล้วอ่าน [CONTEXT.md](./CONTEXT.md), [design.md](./design.md), [Tasks.md](./Tasks.md) เพื่อทำงานต่อ
 
 ## โปรเจ็กต์คืออะไร
 เว็บหน้าเดียวบันทึกว่าเพื่อนยืมของอะไร เมื่อไร ต้องคืนเมื่อไร และกดคืนแล้วได้ เทคโนโลยี: React 19 + Vite 8 (JavaScript), Vitest 5
@@ -24,22 +24,22 @@
 |---|---|---|
 | เอกสารเวอร์ชัน 2 (design / CONTEXT / Tasks) | เสร็จ | `d196384` |
 | T5.1 ปิด "Allow new users to sign up" | **ค้าง** ผู้ใช้ทำเองใน Dashboard | – |
-| T5.2 สร้างบัญชีเจ้าของ + บัญชีทดสอบ (Auto Confirm) | **ค้าง** ผู้ใช้ทำเองใน Dashboard (รหัสผ่านไม่ผ่านแชท) | – |
+| T5.2 สร้างบัญชีเจ้าของ + บัญชีทดสอบ (Auto Confirm) | เสร็จ (มี 2 บัญชี ยืนยันอีเมลแล้ว) | – |
 | T5.3 – T5.4 `supabase/schema.sql` (ตาราง, check, index, RLS, grant) | เสร็จ | `0b8ce55` |
-| T5.5 รัน `schema.sql` บน Supabase | **ค้าง** รอ Supabase MCP | – |
-| T5.6 ติดตั้ง supabase-js + `.env.example` | เสร็จบางส่วน **เหลือสร้าง `.env.local`** | `0b8ce55` |
+| T5.5 รัน `schema.sql` บน Supabase | เสร็จ ผ่าน MCP (migration `create_loans_table_with_rls`) ตรวจนโยบาย/grant/RLS แล้ว | – |
+| T5.6 ติดตั้ง supabase-js + `.env.example` + `.env.local` | เสร็จ (`.env.local` ไม่ commit) | `0b8ce55` |
 | T6.1 – T6.7 ชั้นข้อมูลใน `src/lib` + เทสต์ | เสร็จ | `f2bd480` |
-| เฟส 7 UI | ยังไม่เริ่ม | – |
+| เฟส 7 UI (T7.1 – T7.7) | เสร็จ ยังไม่ได้ทดลองเข้าสู่ระบบจริงในเบราว์เซอร์ | – |
 | เฟส 8 ตรวจรับ | ยังไม่เริ่ม | – |
 
-`npm test` ผ่าน 124 ข้อ (9 ไฟล์), `npm run lint` และ `npm run build` ผ่าน, push ขึ้น `origin/main` แล้ว (https://github.com/nutcharat123/borrow-buddy-samit)
+`npm test` ผ่าน 117 ข้อ (9 ไฟล์ ลดลงเพราะลบเทสต์ `loadLoans`/`saveLoans`), `npm run lint` และ `npm run build` ผ่าน
+
+ตรวจผ่าน API จริงแล้ว: รหัสผ่านผิดได้ข้อความไทยถูก, `anon` อ่าน/เขียน `loans` ไม่ได้ (42501)
 
 ## ทำต่อจากตรงนี้
-1. **ยืนยันสิทธิ์ Supabase MCP**: เรียก `mcp__supabase__authenticate` เพื่อสร้างลิงก์ใหม่ (ลิงก์เก่าหมดอายุ) ให้ผู้ใช้เปิดแล้วกด **Authorize** ถ้าหน้า `localhost:<port>/callback` โหลดไม่ขึ้น ให้ผู้ใช้วาง URL จากแถบที่อยู่ แล้วเรียก `mcp__supabase__complete_authentication` MCP ผูกกับโปรเจ็กต์ `qvqcsdhutymnmovwqsay`
-2. ผู้ใช้ทำ T5.1 และ T5.2 ใน Dashboard
-3. ผ่าน MCP: รัน `supabase/schema.sql` (T5.5) แล้วตรวจตาราง นโยบาย และ grant
-4. ผ่าน MCP: ดึง Project URL และ publishable key มาเขียน `.env.local` (T5.6) โดยไม่แสดงค่าในแชท
-5. เริ่มเฟส 7 ตาม `Tasks.md`
+1. ผู้ใช้ยืนยัน T5.1 ว่าปิด "Allow new users to sign up" แล้ว (ตรวจผ่าน MCP ไม่ได้)
+2. Security advisor เตือนฟังก์ชัน `public.rls_auto_enable()` (SECURITY DEFINER ที่ `anon` เรียกได้) ซึ่งไม่ได้มาจากโปรเจ็กต์นี้ ต้องถามผู้ใช้ก่อนแก้ และแนะนำเปิด Leaked Password Protection
+3. เริ่มเฟส 8 ตาม `Tasks.md` (ผู้ใช้เข้าสู่ระบบเอง รหัสผ่านไม่ผ่านแชท)
 
 ## โครงโค้ดปัจจุบัน
 `src/lib` (ตรรกะล้วน มีเทสต์ทุกไฟล์): `today` เป็นสตริง ISO `YYYY-MM-DD` ที่ส่งเข้าฟังก์ชันเสมอ
@@ -51,11 +51,11 @@
 - `supabaseErrors.js`: `ERROR_MESSAGE`, `toThaiError(error)` → ข้อความไทย หรือ `null`
 - `loanRepository.js`: `createLoanRepository(client)` → `listLoans`, `createLoan`, `updateLoan`, `createLoans` คืน `{ loans|loan, error }` error เป็นข้อความไทย **ไม่มีฟังก์ชันลบ**
 - `localImport.js`: `prepareLegacyImport(items)`, `importLegacyLoans(repository, items)`
-- `storage.js`: `readLegacyLoans`, `getImportMark` / `setImportMark` (คีย์ `borrow-buddy:imported:<ownerId>`, ค่า `IMPORT_MARK.IMPORTED` / `SKIPPED`) และยังมี `loadLoans` / `saveLoans` ของเวอร์ชัน 1 ที่ `App.jsx` ใช้อยู่ **ให้ลบใน T7.4**
+- `storage.js`: `readLegacyLoans`, `getImportMark` / `setImportMark` (คีย์ `borrow-buddy:imported:<ownerId>`, ค่า `IMPORT_MARK.IMPORTED` / `SKIPPED`) (ลบ `loadLoans` / `saveLoans` แล้วใน T7.4)
 
-`src/components` (ไม่มีเทสต์ ตรวจด้วยมือ): `LoanForm`, `LoanList`, `LoanItem`, `SearchBox`, `ThemeToggle`
+`src/components` (ไม่มีเทสต์ ตรวจด้วยมือ): `LoanForm` (`onSave` เป็น async คืน true/false), `LoanList`, `LoanItem` (prop `busy`), `SearchBox`, `ThemeToggle`, `LoginForm`, `AccountBar`, `LocalImportBanner`
 
-`src/App.jsx`: **ยังเป็นเวอร์ชัน 1** (อ่าน/เขียน localStorage ผ่าน `changeLoans`) จะเปลี่ยนในเฟส 7
+`src/App.jsx`: ติดตาม session ด้วย `onAuthStateChange`, ออกจากระบบด้วย `signOut({ scope: 'local' })`, หน้าหลักอยู่ใน `OwnerHome` ที่ใส่ `key` ตาม user id เพื่อล้าง Loan เมื่อออกจากระบบ/เปลี่ยนบัญชี
 
 `supabase/schema.sql`: รันซ้ำได้, `revoke all` จาก `anon`/`authenticated` แล้ว grant เฉพาะ select/insert/update ให้ `authenticated`, นโยบายใช้ `(select auth.uid()) = owner_id`
 
