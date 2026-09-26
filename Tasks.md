@@ -52,7 +52,7 @@
 
 ## เฟส 5: ตั้งค่า Supabase
 
-- [ ] T5.1 สร้างโปรเจ็กต์ Supabase และปิด "Allow new users to sign up" ใน Auth
+- [x] T5.1 สร้างโปรเจ็กต์ Supabase และปิด "Allow new users to sign up" ใน Auth
 - [x] T5.2 ผู้ดูแลระบบสร้างบัญชีเจ้าของใน Dashboard (ยืนยันอีเมลแล้ว) และบัญชีทดสอบที่ 2 สำหรับตรวจ RLS
 - [x] T5.3 เขียน `supabase/schema.sql`: ตาราง `loans` ตาม design.md ข้อ 4 พร้อม check constraint และ index `owner_id`
 - [x] T5.4 ใน `schema.sql`: เปิด RLS และสร้างนโยบาย select / insert / update สำหรับ `authenticated` ด้วย `owner_id = auth.uid()` ไม่มีนโยบาย delete

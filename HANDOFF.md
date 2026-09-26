@@ -1,6 +1,6 @@
 # Handoff: Borrow Buddy (สรุปส่งต่องาน)
 
-อัปเดตล่าสุด: 2026-09-26 (เวอร์ชัน 2: เสร็จเฟส 7 รอตรวจรับเฟส 8, T5.1 ยังไม่ยืนยัน) อ่านไฟล์นี้ก่อน แล้วอ่าน [CONTEXT.md](./CONTEXT.md), [design.md](./design.md), [Tasks.md](./Tasks.md) เพื่อทำงานต่อ
+อัปเดตล่าสุด: 2026-09-26 (เวอร์ชัน 2: เสร็จเฟส 5–7 รอตรวจรับเฟส 8) อ่านไฟล์นี้ก่อน แล้วอ่าน [CONTEXT.md](./CONTEXT.md), [design.md](./design.md), [Tasks.md](./Tasks.md) เพื่อทำงานต่อ
 
 ## โปรเจ็กต์คืออะไร
 เว็บหน้าเดียวบันทึกว่าเพื่อนยืมของอะไร เมื่อไร ต้องคืนเมื่อไร และกดคืนแล้วได้ เทคโนโลยี: React 19 + Vite 8 (JavaScript), Vitest 5
@@ -23,7 +23,7 @@
 | เฟส / Task | สถานะ | Commit |
 |---|---|---|
 | เอกสารเวอร์ชัน 2 (design / CONTEXT / Tasks) | เสร็จ | `d196384` |
-| T5.1 ปิด "Allow new users to sign up" | **ค้าง** ผู้ใช้ทำเองใน Dashboard | – |
+| T5.1 ปิด "Allow new users to sign up" | เสร็จ (ผู้ใช้ยืนยัน 2026-09-26) | – |
 | T5.2 สร้างบัญชีเจ้าของ + บัญชีทดสอบ (Auto Confirm) | เสร็จ (มี 2 บัญชี ยืนยันอีเมลแล้ว) | – |
 | T5.3 – T5.4 `supabase/schema.sql` (ตาราง, check, index, RLS, grant) | เสร็จ | `0b8ce55` |
 | T5.5 รัน `schema.sql` บน Supabase | เสร็จ ผ่าน MCP (migration `create_loans_table_with_rls`) ตรวจนโยบาย/grant/RLS แล้ว | – |
@@ -37,7 +37,7 @@
 ตรวจผ่าน API จริงแล้ว: รหัสผ่านผิดได้ข้อความไทยถูก, `anon` อ่าน/เขียน `loans` ไม่ได้ (42501)
 
 ## ทำต่อจากตรงนี้
-1. ผู้ใช้ยืนยัน T5.1 ว่าปิด "Allow new users to sign up" แล้ว (ตรวจผ่าน MCP ไม่ได้)
+1. T5.1 เสร็จแล้ว ข้อ signUp ใน T8.4 ยังไม่ได้ทดสอบผ่าน API
 2. Security advisor เตือนฟังก์ชัน `public.rls_auto_enable()` (SECURITY DEFINER ที่ `anon` เรียกได้) ซึ่งไม่ได้มาจากโปรเจ็กต์นี้ ต้องถามผู้ใช้ก่อนแก้ และแนะนำเปิด Leaked Password Protection
 3. เฟส 8 ที่เหลือ: T8.2, T8.3, T8.5 ผู้ใช้ทดลองในเบราว์เซอร์เอง (รหัสผ่านไม่ผ่านแชท) และ signUp ใน T8.4
 4. วิธีตรวจ RLS ที่ใช้: `execute_sql` เป็นบล็อก `do` ที่ `set local role authenticated` + `request.jwt.claims` ของบัญชี A แล้ว `raise exception` ท้ายบล็อกเพื่อย้อนกลับทุกอย่าง
