@@ -38,7 +38,7 @@
 
 ## ทำต่อจากตรงนี้
 1. ~~T5.1~~ เสร็จแล้ว (2026-09-27)
-2. ~~`public.rls_auto_enable()`~~ ผู้ใช้รัน `revoke execute ... from public, anon, authenticated` แล้ว (2026-09-27) ยังไม่ทราบว่าผู้ใช้เปิด Leaked Password Protection แล้วหรือไม่ (API ตรวจไม่ได้)
+2. ~~`public.rls_auto_enable()`~~ ผู้ใช้รัน `revoke execute ... from public, anon, authenticated` แล้ว (2026-09-27) Leaked Password Protection เปิดไม่ได้เพราะเป็นแพ็กเกจฟรี (ต้อง Pro ขึ้นไป) ตัดสินใจข้าม เพราะปิดสมัครสมาชิกแล้วและมีแค่ 2 บัญชี
 3. ~~เฟส 8~~ ผ่านทุกข้อแล้ว (2026-09-27) ผู้ใช้ลบ Loan ทดสอบ (`friend_name like 'ทดสอบ%'`) ผ่าน SQL Editor แล้ว
 4. วิธีตรวจ RLS ที่ใช้: `execute_sql` เป็นบล็อก `do` ที่ `set local role authenticated` + `request.jwt.claims` ของบัญชี A แล้ว `raise exception` ท้ายบล็อกเพื่อย้อนกลับทุกอย่าง
 
