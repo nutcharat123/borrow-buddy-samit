@@ -30,7 +30,7 @@
 | T5.6 ติดตั้ง supabase-js + `.env.example` + `.env.local` | เสร็จ (`.env.local` ไม่ commit) | `0b8ce55` |
 | T6.1 – T6.7 ชั้นข้อมูลใน `src/lib` + เทสต์ | เสร็จ | `f2bd480` |
 | เฟส 7 UI (T7.1 – T7.7) | เสร็จ ยังไม่ได้ทดลองเข้าสู่ระบบจริงในเบราว์เซอร์ | – |
-| เฟส 8 ตรวจรับ | เสร็จทุกข้อ (2026-09-27) รอลบข้อมูลทดสอบใน Supabase | – |
+| เฟส 8 ตรวจรับ | เสร็จทุกข้อ (2026-09-27) ลบ Loan ทดสอบใน Supabase แล้ว | `b75e2e6` |
 
 `npm test` ผ่าน 117 ข้อ (9 ไฟล์ ลดลงเพราะลบเทสต์ `loadLoans`/`saveLoans`), `npm run lint` และ `npm run build` ผ่าน
 
@@ -39,7 +39,7 @@
 ## ทำต่อจากตรงนี้
 1. ~~T5.1~~ เสร็จแล้ว (2026-09-27)
 2. ~~`public.rls_auto_enable()`~~ ผู้ใช้รัน `revoke execute ... from public, anon, authenticated` แล้ว (2026-09-27) ยังไม่ทราบว่าผู้ใช้เปิด Leaked Password Protection แล้วหรือไม่ (API ตรวจไม่ได้)
-3. ~~เฟส 8~~ ผ่านทุกข้อแล้ว (2026-09-27) เหลือลบ Loan ทดสอบในตาราง `loans` (ผู้ใช้รัน SQL เอง)
+3. ~~เฟส 8~~ ผ่านทุกข้อแล้ว (2026-09-27) ผู้ใช้ลบ Loan ทดสอบ (`friend_name like 'ทดสอบ%'`) ผ่าน SQL Editor แล้ว
 4. วิธีตรวจ RLS ที่ใช้: `execute_sql` เป็นบล็อก `do` ที่ `set local role authenticated` + `request.jwt.claims` ของบัญชี A แล้ว `raise exception` ท้ายบล็อกเพื่อย้อนกลับทุกอย่าง
 
 ## โครงโค้ดปัจจุบัน
