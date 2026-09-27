@@ -60,6 +60,12 @@
 
 `supabase/schema.sql`: รันซ้ำได้, `revoke all` จาก `anon`/`authenticated` แล้ว grant เฉพาะ select/insert/update ให้ `authenticated`, นโยบายใช้ `(select auth.uid()) = owner_id`
 
+## Deploy
+- Deploy บน Vercel (Hobby) เชื่อมกับ GitHub `borrow-buddy-samit` branch `main` push แล้ว deploy ใหม่อัตโนมัติ (2026-09-27)
+- Framework Preset: Vite ไม่ต้องมี `vercel.json` เพราะเป็นหน้าเดียวไม่มี routing
+- Environment Variables ใน Vercel: `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` (ผู้ใช้ใส่เอง) ถ้าเปลี่ยนค่าต้อง Redeploy
+- ผู้ใช้ทดลองเข้าสู่ระบบจากคอมพิวเตอร์และมือถือแล้ว เห็นข้อมูลตรงกัน
+
 ## ข้อตัดสินใจและสิ่งที่ควรรู้
 - ใช้ **publishable key** (`VITE_SUPABASE_PUBLISHABLE_KEY`) ตามเอกสาร Supabase ล่าสุด แทน anon key ห้ามใช้ secret / service role key ในหน้าเว็บ
 - `.gitignore` กัน `.env.local` แล้ว และไม่กัน `.env.example`
