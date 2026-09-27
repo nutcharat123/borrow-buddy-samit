@@ -31,6 +31,7 @@
 | T6.1 – T6.7 ชั้นข้อมูลใน `src/lib` + เทสต์ | เสร็จ | `f2bd480` |
 | เฟส 7 UI (T7.1 – T7.7) | เสร็จ ยังไม่ได้ทดลองเข้าสู่ระบบจริงในเบราว์เซอร์ | – |
 | เฟส 8 ตรวจรับ | เสร็จทุกข้อ (2026-09-27) ลบ Loan ทดสอบใน Supabase แล้ว | `b75e2e6` |
+| เฟส 9 ปรับ UI (Tab ด้านล่าง, การ์ดสรุป, สีสัน) | เสร็จ 2026-09-27 | ดู git log |
 
 `npm test` ผ่าน 117 ข้อ (9 ไฟล์ ลดลงเพราะลบเทสต์ `loadLoans`/`saveLoans`), `npm run lint` และ `npm run build` ผ่าน
 
@@ -50,11 +51,12 @@
 - `supabaseClient.js`: `readSupabaseConfig(env)` → `{ config, error }`, `getSupabase()` → `{ client, error }` (สร้างครั้งเดียว ไม่โยนข้อผิดพลาด)
 - `loanMapper.js`: `LOAN_COLUMNS`, `toLoan(row)`, `toRow(loan)` (ไม่ส่ง `id` / `owner_id`)
 - `supabaseErrors.js`: `ERROR_MESSAGE`, `toThaiError(error)` → ข้อความไทย หรือ `null`
+- `tabs.js`: `TAB`, `TAB_STATUSES`, `countByStatus(loans, today)` (เฟส 9)
 - `loanRepository.js`: `createLoanRepository(client)` → `listLoans`, `createLoan`, `updateLoan`, `createLoans` คืน `{ loans|loan, error }` error เป็นข้อความไทย **ไม่มีฟังก์ชันลบ**
 - `localImport.js`: `prepareLegacyImport(items)`, `importLegacyLoans(repository, items)`
 - `storage.js`: `readLegacyLoans`, `getImportMark` / `setImportMark` (คีย์ `borrow-buddy:imported:<ownerId>`, ค่า `IMPORT_MARK.IMPORTED` / `SKIPPED`) (ลบ `loadLoans` / `saveLoans` แล้วใน T7.4)
 
-`src/components` (ไม่มีเทสต์ ตรวจด้วยมือ): `LoanForm` (`onSave` เป็น async คืน true/false), `LoanList`, `LoanItem` (prop `busy`), `SearchBox`, `ThemeToggle`, `LoginForm`, `AccountBar`, `LocalImportBanner`
+`src/components` (ไม่มีเทสต์ ตรวจด้วยมือ): `TabBar`, `SummaryCards` (เฟส 9), `LoanForm` (`onSave` เป็น async คืน true/false), `LoanList`, `LoanItem` (prop `busy`), `SearchBox`, `ThemeToggle`, `LoginForm`, `AccountBar`, `LocalImportBanner`
 
 `src/App.jsx`: ติดตาม session ด้วย `onAuthStateChange`, ออกจากระบบด้วย `signOut({ scope: 'local' })`, หน้าหลักอยู่ใน `OwnerHome` ที่ใส่ `key` ตาม user id เพื่อล้าง Loan เมื่อออกจากระบบ/เปลี่ยนบัญชี
 
