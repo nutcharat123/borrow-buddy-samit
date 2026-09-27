@@ -1,6 +1,6 @@
 # Handoff: Borrow Buddy (สรุปส่งต่องาน)
 
-อัปเดตล่าสุด: 2026-09-26 (เวอร์ชัน 2: เสร็จเฟส 5–7 รอตรวจรับเฟส 8) อ่านไฟล์นี้ก่อน แล้วอ่าน [CONTEXT.md](./CONTEXT.md), [design.md](./design.md), [Tasks.md](./Tasks.md) เพื่อทำงานต่อ
+อัปเดตล่าสุด: 2026-09-27 (เวอร์ชัน 2: เฟส 5–8 เสร็จทุกข้อ) อ่านไฟล์นี้ก่อน แล้วอ่าน [CONTEXT.md](./CONTEXT.md), [design.md](./design.md), [Tasks.md](./Tasks.md) เพื่อทำงานต่อ
 
 ## โปรเจ็กต์คืออะไร
 เว็บหน้าเดียวบันทึกว่าเพื่อนยืมของอะไร เมื่อไร ต้องคืนเมื่อไร และกดคืนแล้วได้ เทคโนโลยี: React 19 + Vite 8 (JavaScript), Vitest 5
@@ -23,23 +23,23 @@
 | เฟส / Task | สถานะ | Commit |
 |---|---|---|
 | เอกสารเวอร์ชัน 2 (design / CONTEXT / Tasks) | เสร็จ | `d196384` |
-| T5.1 ปิด "Allow new users to sign up" | เสร็จ (ผู้ใช้ยืนยัน 2026-09-26) | – |
+| T5.1 ปิด "Allow new users to sign up" | เสร็จ 2026-09-27 (`disable_signup: true`, signUp ได้ 422 `signup_disabled`) | – |
 | T5.2 สร้างบัญชีเจ้าของ + บัญชีทดสอบ (Auto Confirm) | เสร็จ (มี 2 บัญชี ยืนยันอีเมลแล้ว) | – |
 | T5.3 – T5.4 `supabase/schema.sql` (ตาราง, check, index, RLS, grant) | เสร็จ | `0b8ce55` |
 | T5.5 รัน `schema.sql` บน Supabase | เสร็จ ผ่าน MCP (migration `create_loans_table_with_rls`) ตรวจนโยบาย/grant/RLS แล้ว | – |
 | T5.6 ติดตั้ง supabase-js + `.env.example` + `.env.local` | เสร็จ (`.env.local` ไม่ commit) | `0b8ce55` |
 | T6.1 – T6.7 ชั้นข้อมูลใน `src/lib` + เทสต์ | เสร็จ | `f2bd480` |
 | เฟส 7 UI (T7.1 – T7.7) | เสร็จ ยังไม่ได้ทดลองเข้าสู่ระบบจริงในเบราว์เซอร์ | – |
-| เฟส 8 ตรวจรับ | T8.1, T8.6 เสร็จ; T8.4 ผ่านทุกข้อยกเว้น signUp (รอ T5.1); T8.2, T8.3, T8.5 รอผู้ใช้ทดลองในเบราว์เซอร์ | – |
+| เฟส 8 ตรวจรับ | เสร็จทุกข้อ (2026-09-27) รอลบข้อมูลทดสอบใน Supabase | – |
 
 `npm test` ผ่าน 117 ข้อ (9 ไฟล์ ลดลงเพราะลบเทสต์ `loadLoans`/`saveLoans`), `npm run lint` และ `npm run build` ผ่าน
 
 ตรวจผ่าน API จริงแล้ว: รหัสผ่านผิดได้ข้อความไทยถูก, `anon` อ่าน/เขียน `loans` ไม่ได้ (42501)
 
 ## ทำต่อจากตรงนี้
-1. T5.1 เสร็จแล้ว ข้อ signUp ใน T8.4 ยังไม่ได้ทดสอบผ่าน API
-2. Security advisor เตือนฟังก์ชัน `public.rls_auto_enable()` (SECURITY DEFINER ที่ `anon` เรียกได้) ซึ่งไม่ได้มาจากโปรเจ็กต์นี้ ต้องถามผู้ใช้ก่อนแก้ และแนะนำเปิด Leaked Password Protection
-3. เฟส 8 ที่เหลือ: T8.2, T8.3, T8.5 ผู้ใช้ทดลองในเบราว์เซอร์เอง (รหัสผ่านไม่ผ่านแชท) และ signUp ใน T8.4
+1. ~~T5.1~~ เสร็จแล้ว (2026-09-27)
+2. ~~`public.rls_auto_enable()`~~ ผู้ใช้รัน `revoke execute ... from public, anon, authenticated` แล้ว (2026-09-27) ยังไม่ทราบว่าผู้ใช้เปิด Leaked Password Protection แล้วหรือไม่ (API ตรวจไม่ได้)
+3. ~~เฟส 8~~ ผ่านทุกข้อแล้ว (2026-09-27) เหลือลบ Loan ทดสอบในตาราง `loans` (ผู้ใช้รัน SQL เอง)
 4. วิธีตรวจ RLS ที่ใช้: `execute_sql` เป็นบล็อก `do` ที่ `set local role authenticated` + `request.jwt.claims` ของบัญชี A แล้ว `raise exception` ท้ายบล็อกเพื่อย้อนกลับทุกอย่าง
 
 ## โครงโค้ดปัจจุบัน
